@@ -1,1 +1,10 @@
 .alembic_venv
+.direnv/
+.env
+!.envrc
+!.env.example
+
+# Compiled files
+**/__pycache__/
+*.pyc
+*.pyo

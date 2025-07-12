@@ -11,6 +11,10 @@ class User(Base):
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
 
+    # Relationship with Task
+    tasks = relationship("Task", back_populates="user")
+
+
 class Task(Base):
     __tablename__ = 'tasks'
 
@@ -20,6 +24,5 @@ class Task(Base):
     is_complete = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey('users.id'))
 
+    # Relationship with User
     user = relationship("User", back_populates="tasks")
-
-User.tasks = relationship("Task", back_populates="user")
