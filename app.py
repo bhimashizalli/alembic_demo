@@ -2,10 +2,10 @@ import os
 from flask import Flask, request, jsonify, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import User, Task, Base
+from models import User, Task, Category, Base
 
 # Configuration
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.getenv('DATABASE_URL')
 if not DATABASE_URL:
     raise EnvironmentError("Environment variable 'DATABASE_URL' is not set.")
 
@@ -14,20 +14,16 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Initialize Flask app
 app = Flask(__name__)
-
-# Setup for Templates and Static Files
 app.static_folder = 'static'
 app.template_folder = 'templates'
 
-# Create database tables (only necessary during development)
+# Create database tables
 Base.metadata.create_all(bind=engine)
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
-# API Endpoints (same as before)
 @app.route("/user", methods=["POST"])
 def create_user():
     session = SessionLocal()
@@ -60,8 +56,10 @@ def create_task():
         title = request.json["title"]
         description = request.json.get("description", "")
         user_id = request.json["user_id"]
+        due_date = request.json.get("due_date")
+        category_id = request.json.get("category_id")
         is_complete = request.json.get("is_complete", False)
-        task = Task(title=title, description=description, user_id=user_id, is_complete=is_complete)
+        task = Task(title=title, description=description, user_id=user_id, due_date=due_date, category_id=category_id, is_complete=is_complete)
         session.add(task)
         session.commit()
         return jsonify({"message": "Task created successfully", "task_id": task.id}), 201
@@ -82,7 +80,9 @@ def get_tasks():
                 "title": task.title,
                 "description": task.description,
                 "is_complete": task.is_complete,
-                "user_id": task.user_id
+                "due_date": task.due_date,
+                "user_id": task.user_id,
+                "category_id": task.category_id
             }
             for task in tasks
         ])
@@ -106,6 +106,29 @@ def complete_task(task_id):
     finally:
         session.close()
 
+@app.route("/categories", methods=["POST"])
+def create_category():
+    session = SessionLocal()
+    try:
+        name = request.json["name"]
+        category = Category(name=name)
+        session.add(category)
+        session.commit()
+        return jsonify({"message": "Category created successfully", "category_id": category.id}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+    finally:
+        session.close()
+
+@app.route("/categories", methods=["GET"])
+def get_categories():
+    session = SessionLocal()
+    try:
+        categories = session.query(Category).all()
+        return jsonify([{"id": category.id, "name": category.name} for category in categories])
+    finally:
+        session.close()
 
 # Run the app
 if __name__ == "__main__":
