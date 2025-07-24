@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To-Do App - Version 2</title>
+  <title>To-Do App - Version 3</title>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>To-Do App</h1>
-    
-    <!-- Add User -->
+    <h1>To-Do Application</h1>
+
+    <!-- USER FORM -->
     <h2>Create User</h2>
     <form id="createUserForm">
       <input type="text" id="username" placeholder="Username" required>
@@ -18,29 +18,41 @@
       <button type="submit">Create User</button>
     </form>
 
-    <!-- Add Category -->
+    <!-- CATEGORY FORM -->
     <h2>Create Category</h2>
     <form id="createCategoryForm">
       <input type="text" id="categoryName" placeholder="Category Name" required>
       <button type="submit">Create Category</button>
     </form>
 
-    <!-- Add Task -->
+    <!-- TASK FORM -->
     <h2>Create Task</h2>
     <form id="createTaskForm">
-      <input type="text" id="title" placeholder="Task Title" required>
-      <textarea id="description" placeholder="Task Description"></textarea>
-      <input type="number" id="user_id" placeholder="User ID" required>
-      <input type="date" id="due_date" placeholder="Due Date">
-      <input type="number" id="category_id" placeholder="Category ID">
+      <input type="text" id="taskTitle" placeholder="Task Title" required>
+      <textarea id="taskDescription" placeholder="Task Description"></textarea>
+      <input type="number" id="assignedUserId" placeholder="User ID" required>
+      <input type="number" id="taskPriority" placeholder="Priority (e.g., 1-5)">
+      <input type="text" id="taskDueDate" placeholder="Due Date (YYYY-MM-DD)">
+      <input type="number" id="taskCategoryId" placeholder="Category ID">
       <button type="submit">Create Task</button>
     </form>
-    
-    <!-- Task List -->
+
+    <!-- FILTER TASKS -->
+    <h2>Filter Tasks</h2>
+    <form id="filterTaskForm">
+      <input type="number" id="filterUserId" placeholder="User ID">
+      <input type="number" id="filterCategoryId" placeholder="Category ID">
+      <input type="text" id="filterDueDate" placeholder="Due Date (YYYY-MM-DD)">
+      <button type="submit">Filter Tasks</button>
+    </form>
+
+    <!-- TASK LIST -->
     <h2>Task List</h2>
-    <button id="loadTasks">Load Tasks</button>
+    <button id="loadAllTasks">Load All Tasks</button>
     <ul id="taskList"></ul>
   </div>
+
+  <!-- JavaScript for API Operations -->
   <script src="/static/main.js"></script>
 </body>
 </html>
